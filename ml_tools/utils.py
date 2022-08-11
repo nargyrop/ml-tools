@@ -68,7 +68,7 @@ def image_generator(
     mean_values: Union[float, int] = [],
     std_values: Union[float, int] = [],
     normalize_labels: bool = False
-    ) -> Sequence[np.ndarray, np.ndarray]:
+    ) -> Sequence:
     """Generator function for yielding training batches of data
 
     Args:
