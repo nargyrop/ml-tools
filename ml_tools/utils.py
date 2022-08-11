@@ -57,6 +57,26 @@ def experiment_settings(
         fr.close()
       
     return output_filename
+
+def get_experiment_settings(
+    xml_filename: Union[str, Path],
+    ) -> Dict:
+    """Function to get experiment settings from an XML file 
+    generated with the `experiment_settings` function.
+
+    Args:
+        xml_filename (Union[str, Path]): Path to XML file 
+        containing experiment settings.
+
+    Returns:
+        Dict: Dictionary containing experiment settings.
+    """
+    
+    with open(xml_filename, "r") as fd:
+        doc = xdict.parse(fd.read())
+        xml_item = doc['training_parameters']
+    
+    return xml_item
     
 def image_generator(
     X: Sequence,
@@ -68,7 +88,7 @@ def image_generator(
     mean_values: Union[float, int] = [],
     std_values: Union[float, int] = [],
     normalize_labels: bool = False
-    ) -> Sequence:
+    ) -> Union[np.ndarray, np.ndarray]:
     """Generator function for yielding training batches of data
 
     Args:
