@@ -1,8 +1,8 @@
 from typing import List, Tuple, Union
 
 from keras.layers import (Add, Conv2D, Conv2DTranspose, Dropout, Input,
-                          MaxPooling2D)
-from keras.models import Model
+                          MaxPooling2D, Activation, BatchNormalization)
+from keras.models import Model, Sequential
 
 from dl_tools.utils import conv2d_block
 
@@ -71,4 +71,61 @@ class RedNetModel:
         outputs = Conv2D(1, (5, 5), activation='relu') (x)
         model = Model(inputs=[input_img], outputs=[outputs])
 
+        return model
+
+class SRCNNModel:
+    def __init__(
+        self,
+        input_dim: Union[List, Tuple],
+        filters: int = 64,
+        batch_norm: bool = True,
+        dropout: float = None,
+        ) -> None:
+
+        self.input_dim = input_dim
+        self.filters = filters
+        self.batch_norm = batch_norm
+        self.dropout = dropout or 0
+
+        self.filter_multipliers = [1, 2, 4]
+
+    def build_model(
+        self
+    ):
+        model = Sequential()
+
+        # the entire SRCNN architecture consists of three CONV => RELU
+        # layers without any zero-padding
+        model.add(Conv2D(
+            self.filters,
+            (9, 9),
+            kernel_initializer = "he_normal",
+            input_shape=self.input_dim,
+            padding="same"))
+        model.add(Activation("relu"))
+
+        if self.batch_norm:
+            model.add(BatchNormalization())
+        if self.dropout:
+            model.add(Dropout(self.dropout))
+        model.add(Conv2D(
+            self.filters // 2, 
+            (1, 1), 
+            kernel_initializer="he_normal",
+            padding="same")
+            )
+        model.add(Activation("relu"))
+
+        if self.batch_norm:
+            model.add(BatchNormalization())
+        if self.dropout:
+            model.add(Dropout(self.dropout))
+        model.add(Conv2D(
+            self.input_dim[-1],
+            (5, 5),
+            kernel_initializer = "he_normal")
+            )
+        model.add(Activation("relu"))
+
+        # return the constructed network architecture
         return model
