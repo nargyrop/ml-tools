@@ -4,7 +4,7 @@ from keras.layers import (Concatenate, Conv2D, Conv2DTranspose, Dropout, Input,
                           MaxPooling2D)
 from keras.models import Model
 
-from dl_tools.utils import conv2d_block, res_conv2d_block
+from ._utils import conv2d_block, res_conv2d_block
 
 
 class UNET:
@@ -27,7 +27,8 @@ class UNET:
             assert self.activation in ['relu', 'prelu']
             self.use_prelu = self.activation == 'prelu'
         except AssertionError:
-            raise ValueError("Wrong activation function. Choose between 'relu' and 'prelu'.")
+            raise ValueError("Wrong activation function. \
+                Choose between 'relu' and 'prelu'.")
 
         self.filter_multipliers = [1, 2, 4, 8, 16]
 

@@ -1,10 +1,10 @@
 from typing import List, Tuple, Union
 
-from keras.layers import (Add, Conv2D, Conv2DTranspose, Dropout, Input,
-                          MaxPooling2D, Activation, BatchNormalization)
+from keras.layers import (Activation, Add, BatchNormalization, Conv2D,
+                          Conv2DTranspose, Dropout, Input, MaxPooling2D)
 from keras.models import Model, Sequential
 
-from dl_tools.utils import conv2d_block
+from ._utils import conv2d_block
 
 
 class RedNetModel:
