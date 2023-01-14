@@ -10,7 +10,7 @@ def conv2d_block(
         kernel_size: int = 3,
         n_blocks: int = 2,
         batchnorm: bool = True,
-        use_prelu: bool = True
+        use_prelu: bool = False
 ):
     for i in range(n_blocks):
         x = Conv2D(filters=n_filters,

@@ -43,9 +43,11 @@ class UNET:
 
         # compression path
         for idx, mpl in enumerate(self.filter_multipliers):
-            x = conv2d_block(input_img if idx == 0 else x,
-                                  n_filters=self.filters * mpl,
-                                  )
+            x = conv2d_block(
+                input_img if idx == 0 else x,
+                n_filters=self.filters * mpl,
+                use_prelu=self.use_prelu
+                )
             skip_conn[tuple(x.shape)[1: 3]] = x  # skip connection
             if mpl != 16:
                 x = MaxPooling2D((2, 2))(x)
@@ -56,7 +58,11 @@ class UNET:
             x = Conv2DTranspose(self.filters * mpl, (3, 3), strides=(2, 2), padding="same")(x)
             x = Concatenate()([x, skip_conn[tuple(x.shape)[1: 3]]])
             x = Dropout(self.dropout)(x)
-            x = conv2d_block(x, n_filters=self.filters * mpl)
+            x = conv2d_block(
+                x,
+                n_filters=self.filters * mpl,
+                use_prelu=self.use_prelu
+                )
 
         outputs = Conv2D(1, (1, 1), activation="sigmoid")(x)
         model = Model(inputs=[input_img], outputs=[outputs])
