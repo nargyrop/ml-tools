@@ -88,7 +88,7 @@ def image_generator(
 
         # Random flips
         if random_flips:
-            flip = np.random.randint(0, 3)
+            flip = np.random.randint(1, 3)
             if flip:
                 x_train = np.flip(x_train, axis=flip)
                 y_train = np.flip(y_train, axis=flip)
