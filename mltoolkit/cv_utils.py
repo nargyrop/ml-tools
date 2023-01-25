@@ -17,7 +17,7 @@ def image_generator(
     normalize_labels: bool = False,
     random_rotations: bool = False,
     random_flips: bool = False,
-    ) -> Union[np.ndarray, np.ndarray]:
+) -> Union[np.ndarray, np.ndarray]:
     """Generator function for yielding training batches of data
 
     Args:
@@ -26,17 +26,17 @@ def image_generator(
         ids (Sequence): IDs out which random selections will be drawn.
         Defaults to None.
         batch_size (int): Batch size. Defaults to 2.
-        clip_pixels (Sequence, optional): Number of pixels to clip. Can be 
+        clip_pixels (Sequence, optional): Number of pixels to clip. Can be
         used to match output of a CNN with no padding. Defaults to [].
-        min_values (Union[float, int], optional): Min values to be used for 
+        min_values (Union[float, int], optional): Min values to be used for
         normalization. Defaults to [].
-        max_values (Union[float, int], optional): Max values to be used for 
+        max_values (Union[float, int], optional): Max values to be used for
         normalization. Defaults to [].
-        mean_values (Union[float, int], optional): Mean values to be used for 
+        mean_values (Union[float, int], optional): Mean values to be used for
         standardization. Defaults to [].
-        std_values (Union[float, int], optional): Standard deviation values to 
+        std_values (Union[float, int], optional): Standard deviation values to
         be used for standardization. Defaults to [].
-        normalize_labels (bool, optional): Flag to enable normalization of 
+        normalize_labels (bool, optional): Flag to enable normalization of
         labels. Defaults to False.
         random_rotations (bool, optional): Flag to enable randomly rotating the samples in multiples of 90deg.
         Defaults to False.
@@ -60,24 +60,14 @@ def image_generator(
 
         if clip_pixels:
             clip_x, clip_y = clip_pixels
-            y_train = [
-                img[
-                    clip_y: -clip_y, clip_x: -clip_x
-                    ] for img in y_train
-                    ]
+            y_train = [img[clip_y:-clip_y, clip_x:-clip_x] for img in y_train]
 
         # Normalize or standardize data
         if any(max_values):
             if any(min_values):
-                x_train = np.divide(
-                    x_train - min_values,
-                    max_values - min_values
-                    )
+                x_train = np.divide(x_train - min_values, max_values - min_values)
                 if normalize_labels:
-                    y_train = np.divide(
-                        y_train - min_values,
-                        max_values - min_values
-                        )
+                    y_train = np.divide(y_train - min_values, max_values - min_values)
             else:
                 x_train = np.divide(x_train, max_values)
                 if normalize_labels:
@@ -88,14 +78,14 @@ def image_generator(
 
             if normalize_labels:
                 y_train = np.divide(y_train - mean_values, std_values)
-        
+
         # Random rotations
         if random_rotations:
             n_rotations = np.random.randint(0, 4)
             if n_rotations:
                 x_train = np.rot90(x_train, k=n_rotations, axes=(1, 2))
                 y_train = np.rot90(y_train, k=n_rotations, axes=(1, 2))
-        
+
         # Random flips
         if random_flips:
             flip = np.random.randint(0, 3)

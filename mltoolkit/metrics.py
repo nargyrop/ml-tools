@@ -12,7 +12,7 @@ with warnings.catch_warnings():
 
 
 def jaccard_distance(y_true, y_pred, smooth=100):
-    """ Calculates mean of Jaccard distance as a loss function """
+    """Calculates mean of Jaccard distance as a loss function"""
     intersection = K.sum(K.abs(y_true * y_pred), axis=-1)
     sum_ = K.sum(K.abs(y_true) + K.abs(y_pred), axis=-1)
     jac = (intersection + smooth) / (sum_ - intersection + smooth)
