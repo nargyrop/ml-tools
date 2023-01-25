@@ -17,7 +17,7 @@ class UNET:
     def __init__(
         self,
         input_dim: Union[List, Tuple],
-        n_classes: int,
+        n_classes: int = 1,
         filters: int = 64,
         batch_norm: bool = True,
         dropout: float = None,
@@ -42,7 +42,7 @@ class UNET:
                 Choose between 'relu' and 'prelu'."
             )
         try:
-            assert self.activation in ["sigmoid", "softmax"]
+            assert self.output_activation in ["sigmoid", "softmax"]
         except AssertionError:
             raise ValueError(
                 "Wrong output activation function. \
